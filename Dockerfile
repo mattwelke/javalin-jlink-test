@@ -1,5 +1,5 @@
 # Example of custom Java runtime using jlink in a multi-stage container build
-FROM mcr.microsoft.com/openjdk/jdk:16-ubuntu as jre-build
+FROM mcr.microsoft.com/openjdk/jdk:16-ubuntu as runtime-build
 
 # Create a custom Java runtime
 RUN $JAVA_HOME/bin/jlink \
@@ -14,7 +14,7 @@ RUN $JAVA_HOME/bin/jlink \
 FROM debian:buster-slim
 ENV JAVA_HOME /usr/lib/jvm/msopenjdk-16-amd64
 ENV PATH "${JAVA_HOME}/bin:${PATH}"
-COPY --from=jre-build /javaruntime $JAVA_HOME
+COPY --from=runtime-build /javaruntime $JAVA_HOME
 
 # Continue with your application deployment
 RUN mkdir /opt/app
